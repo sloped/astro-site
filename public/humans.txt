@@ -1,0 +1,11 @@
+/* TEAM */
+	Author: yourname
+	Contact:youremail [at] yourdomain
+	From: Somewhere
+		
+
+/* SITE */
+	Last update:2024/02/22
+	Language: English
+	Doctype: HTML5
+	IDE: Visual Studio Code, GIMP, vim

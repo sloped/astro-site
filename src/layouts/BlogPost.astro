@@ -1,0 +1,61 @@
+---
+import '../styles/prism.css';
+
+import type { CollectionEntry } from 'astro:content';
+import BaseHead from '../components/BaseHead.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Tags from '../components/Tags.astro';
+import Mentions from "../components/Mentions.astro";
+import FormattedDate from '../components/FormattedDate.astro';
+import { Image } from "astro:assets";
+import defaultImage from '../media/bg-1.jpg';
+import { SITE_TITLE } from '../consts';
+type Props = CollectionEntry<'blog'>;
+const slug = Astro.props.slug;
+const { title, description, pubDate, updatedDate, heroImage, tags } = Astro.props.data;
+---
+
+<html lang="en">
+	<head>
+		<BaseHead title={`${title} | ${SITE_TITLE}`} description={description} image={heroImage ? heroImage.src : defaultImage.src} />
+		<link rel="author" href="" />
+		</style>
+	</head>
+
+	<body>
+		<Header />
+		<main class="full h-entry">
+			<article>
+				<div>
+					{tags && tags.length && <Tags tags={tags} />}
+				</div>
+				<div class="flex hero-image pb-4 justify-center">
+					{heroImage && <Image width="1020" height="510" src={heroImage} alt="" />}
+					{!heroImage && <Image width="1020" height="510" src={defaultImage} alt="" />}
+				</div>
+				<div>
+					<div class="title max-w-prose mx-auto">
+						<div class="date text-center text-lg">
+							<FormattedDate date={pubDate} />
+							{
+								updatedDate && (
+									<div class="last-updated-on dt-published">
+										Last updated on <FormattedDate date={updatedDate} />
+									</div>
+								)
+							}
+						</div>
+						<h1 class="center py-4 text-center p-name"><a class="u-url text-black hover:text-black" href={`/blog/${slug}/`}>{title}</a></h1>
+						<hr class="pb-4"/>
+					</div>
+					<div class="prose mx-auto e-content" contenteditable={import.meta.env.MODE === "development"}>
+					<slot />
+				</div>
+				</div>
+			</article>
+		</main>
+		<Mentions slug={slug} />
+		<Footer />
+	</body>
+</html>

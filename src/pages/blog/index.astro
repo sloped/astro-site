@@ -1,0 +1,47 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { Image } from "astro:assets";
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import defaultImage from '../../media/bg-1.jpg';
+const posts = (await getCollection('blog')).sort(
+	(b, a) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf()
+).filter((post) => {
+	return post.data.is_draft !== true
+});
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<ul class="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-5 justify-items-center">
+					{
+						posts.map((post, index) => (
+							
+							<li class="md:first:col-span-2 xl:first:col-span-3 max-w-[444px] md:max-w-none">
+								<a href={`/blog/${post.slug}/`}>
+									{post.data.heroImage && <Image  width={index === 0 ? 1080 : 444} src={post.data.heroImage} alt="" />}
+									{!post.data.heroImage && <Image  width={index === 0 ? 920 : 444} src={defaultImage} alt="" />}
+									<h4 class="title text-xl pt-4">{post.data.title}</h4>
+									<p class="date text-sm text-gray-600">
+										<FormattedDate date={post.data.pubDate} />
+									</p>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

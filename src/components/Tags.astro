@@ -1,0 +1,17 @@
+---
+interface Props {
+	tags: string[];
+}
+
+const { tags } = Astro.props;
+// if you follow the pattern found in the knowledge-backup page you can make additional tags that created a list of pages with that link
+const pages = ['knowledge-backup'];
+
+---
+
+<ul class="text-center mb-4">
+{tags.map((tag)=> (
+pages.includes(tag) && <li class="inline mr-2 italic text-sm"><a class="text-stone-600"href={"/".concat(tag)}>{tag}</li></a> ||
+!pages.includes(tag) && <li class="inline mr-2 italic text-sm">{tag}</li>
+))}
+</ul>

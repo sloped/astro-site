@@ -1,0 +1,17 @@
+---
+import Layout from '../layouts/Page.astro';
+import { getEntry } from 'astro:content';
+
+const page = await getEntry('pages', '404');
+const { Content } = await page.render();
+const date = page.data.updatedDate ? page.data.updatedDate.toDateString() : page.data.pubDate.toDateString();
+---
+
+<Layout
+	title={page.data.title}
+	description="That page does not exist"
+	pubDate={new Date(date)}
+	heroImage={page.data.heroImage}
+>
+	<Content />
+</Layout>

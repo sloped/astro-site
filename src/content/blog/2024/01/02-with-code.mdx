@@ -1,0 +1,20 @@
+---
+title: 'A post with code'
+description: 'a post using Prism'
+pubDate: 'Jan 2 2024'
+tags: ["code"]
+heroImage: ./images/3018x2280.gif
+slug: 2024/01/02/pasta-quest
+---
+import { Prism } from '@astrojs/prism';
+
+You can use Prism to display highlighted code snippets. 
+
+<Prism lang="bash" code={`
+#!/bin/bash
+
+echo "This is a fancy code block with a $variable"
+
+`} />
+
+You can use this to show off your fancy code. 

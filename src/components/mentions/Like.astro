@@ -1,0 +1,14 @@
+---
+import type {Mention} from '../../lib/webmentions';
+interface Props {
+	mention: Mention;
+}
+
+const { mention } = Astro.props;
+
+---
+
+<div class="webmention like">
+    <p>🧡 <a href={mention.source}>{mention.author_name ? mention.author_name : 'Someone'}</a> liked this post.</p>
+</div>
+  

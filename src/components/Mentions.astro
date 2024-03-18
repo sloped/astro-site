@@ -1,0 +1,37 @@
+---
+import fetch_webmentions from "../lib/fetch_webmentions";
+import Like from './mentions/Like.astro';
+import Reply from './mentions/Reply.astro';
+import Repost from './mentions/Repost.astro';
+import Mention from './mentions/Mention.astro';
+import Rsvp from './mentions/Rsvp.astro';
+import Comment from './mentions/Comment.astro'
+interface Props {
+	slug: string;
+}
+
+const { slug } = Astro.props;
+
+const mentions = (await fetch_webmentions()).items.filter((mention) => {
+    return mention.target.indexOf(slug) > -1
+});
+
+---
+<div class="webmentions mx-auto mb-2 text-base">
+    {mentions.length > 0 &&  <h2 class="text-lg">Mentions</h2>
+ <ul class="mb-4 text-base ">
+    {mentions.map((mention)=> ( 
+        <li class="mb-4 border-b">
+            {mention.type && mention.type === 'like' && <Like mention={mention} />}
+            {mention.type && mention.type === 'reply' && <Reply mention={mention} />}
+            {mention.type && mention.type === 'repost' && <Repost mention={mention} />}
+            {mention.type && mention.type === 'rsvp' && <Rsvp mention={mention} />}
+            {mention.type && mention.type === 'comment' && <Comment mention={mention} />}
+            {mention.type && mention.type === 'mention' && <Mention mention={mention} />}
+            {mention.type === undefined && <Mention mention={mention} />}
+        </li>
+    
+    ))}
+    </ul>}
+    <p><a class="text-sm text-gray-600" href="/replying">How to reply to this post</a></p>
+    </div>

@@ -1,0 +1,14 @@
+---
+import type {Mention} from '../../lib/webmentions';
+interface Props {
+	mention: Mention;
+}
+
+const { mention } = Astro.props;
+
+---
+  
+<div class="webmention reply">
+<p>↩️ <a href={mention.source}>{mention.author_name ? `${mention.author_name} replied` : 'Someone replied'}</a> {mention.content && mention.content}</p>
+</div>
+  

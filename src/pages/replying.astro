@@ -1,0 +1,19 @@
+---
+import Layout from '../layouts/Page.astro';
+import { getEntry } from 'astro:content';
+
+const about = await getEntry('pages', 'replying');
+const { Content } = await about.render();
+const date = about.data.updatedDate ? about.data.updatedDate.toDateString() : about.data.pubDate.toDateString();
+
+
+---
+
+<Layout
+	title="Replying with Webmentions"
+	description="How to use webmentions to reply to my content"
+	pubDate={new Date(date)}
+	heroImage={about.data.heroImage}
+>
+	<Content />
+</Layout>
