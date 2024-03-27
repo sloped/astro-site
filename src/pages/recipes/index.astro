@@ -1,0 +1,61 @@
+---
+import BaseHead from '../../components/BaseHead.astro';
+import Header from '../../components/Header.astro';
+import Footer from '../../components/Footer.astro';
+import { Image } from 'astro:assets';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../../consts';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+import fetchRecipe from '../../lib/fetch_recipe';
+
+const merged = await Promise.all((await getCollection('recipes')).map(async (recipe) => {
+	try{
+		const from_mealie = await fetchRecipe(recipe.data.recipe_slug);
+		return Object.assign({}, from_mealie, recipe.data)
+	} catch(e){
+		console.error(e);
+		return false;
+	}
+	
+}))
+const recipes = merged.filter((recipe) => {
+	return recipe.slug && recipe.slug.length > 1;
+}).sort(
+	(b, a) => a.pubDate.valueOf() - b.pubDate.valueOf()
+).filter((recipe) => {
+	return recipe.is_draft !== true
+});
+
+---
+
+<!doctype html>
+<html lang="en">
+	<head>
+		<BaseHead title={SITE_TITLE} description={SITE_DESCRIPTION} />
+	</head>
+	<body>
+		<Header />
+		<main>
+			<section>
+				<ul class="grid grid-cols-1 xl:grid-cols-3 md:grid-cols-2 gap-5 justify-items-center">
+					{
+						recipes.map((data) => (
+							
+						<li class=" max-w-[444px] md:max-w-none">
+								<a href={`/recipes/${data.slug}/`}>
+									<Image alt="" height="300" src={data.heroImage} />
+									<h4 class="title text-xl pt-4">{data.name}</h4>
+									<p class="date text-sm text-gray-600">
+										<FormattedDate date={data.pubDate} />
+									</p>
+								</a>
+							</li>
+						
+						))
+					}
+				</ul>
+			</section>
+		</main>
+		<Footer />
+	</body>
+</html>

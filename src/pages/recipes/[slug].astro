@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Recipe from '../../layouts/Recipe.astro';
+import type {default as RecipeType} from '../../lib/content/recipes';
+import fetchRecipe from '../../lib/fetch_recipe';
+
+export async function getStaticPaths() {
+	const merged = await Promise.all((await getCollection('recipes')).map(async (recipe) => {
+
+		try{
+			const from_mealie = await fetchRecipe(recipe.data.recipe_slug);
+			return Object.assign({}, from_mealie, recipe)
+		} catch(e){
+			console.error(e);
+			return false;
+		}
+	}))
+	
+	const recipes = merged.filter((recipe) => {
+		return recipe.slug && recipe.slug.length > 1;
+	}).filter((recipe) => {
+		return recipe.data.is_draft !== true
+	});
+	return recipes.map( (recipe) => ({
+		params: { slug: recipe.data.recipe_slug },
+		props: recipe,
+	}));
+}
+
+
+type Props = RecipeType;
+
+const recipe = Astro.props;
+const { Content } = await recipe.render();
+---
+
+<Recipe {...recipe}>
+	<Content />
+</Recipe>

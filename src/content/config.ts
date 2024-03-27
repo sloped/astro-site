@@ -18,23 +18,17 @@ const blog = defineCollection({
 	
 });
 
-// const diary = defineCollection({
-// 	type: 'content',
-// 	// Type-check frontmatter using a schema
-// 	schema: ({image}) => z.object({
-// 			title: z.string(),
-// 			description: z.string(),
-// 			// Transform string to Date object
-// 			pubDate: z.coerce.date(),
-// 			updatedDate: z.coerce.date().optional(),
-// 			heroImage: image().refine((img) => img.width >= 1080, {
-// 				message: "Cover image must be at least 1080 pixels wide!",
-// 			  }).optional(),
-// 			tags: z.array(z.string()).optional(),
-// 			is_draft: z.boolean().default(false)
-// 		}),
-	
-// });
+const recipes = defineCollection({
+	type: 'content',
+	schema: ({image}) => z.object({
+		heroImage: image().refine((img) => img.width >= 1080, {
+			message: "Cover image must be at least 1080 pixels wide!",
+		  }).optional(),
+		recipe_slug: z.string(),
+		pubDate: z.coerce.date(),
+		is_draft: z.boolean().optional().default(false)
+	}),
+})
 
 const pages = defineCollection({
 	type: 'content',
@@ -49,4 +43,4 @@ const pages = defineCollection({
 		  }).optional(),
 	}),
 });
-export const collections = { blog, pages };
+export const collections = { blog, pages, recipes };
